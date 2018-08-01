@@ -152,9 +152,11 @@ Indicator.prototype.handleEvent = function (e) {
 }
 
 Indicator.prototype.refresh = function () {
-  this.transitionTime()
-  this._calculate()
-  this.updatePosition()
+  if (this._shouldShow()) {
+    this.transitionTime()
+    this._calculate()
+    this.updatePosition()
+  }
 }
 
 Indicator.prototype.fade = function (visible, hold) {
@@ -343,6 +345,15 @@ Indicator.prototype._pos = function (x, y) {
   })
 }
 
+Indicator.prototype._shouldShow = function () {
+  if ((this.direction === 'vertical' && this.scroller.hasVerticalScroll) || (this.direction === 'horizontal' && this.scroller.hasHorizontalScroll)) {
+    this.wrapper.style.display = ''
+    return true
+  }
+  this.wrapper.style.display = 'none'
+  return false
+}
+
 Indicator.prototype._calculate = function () {
   if (this.direction === 'vertical') {
     let wrapperHeight = this.wrapper.clientHeight
@@ -393,4 +404,3 @@ Indicator.prototype._handleDOMEvents = function (eventOperation) {
     eventOperation(window, 'mouseup', this)
   }
 }
-

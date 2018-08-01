@@ -35,7 +35,6 @@
     },
     data() {
       return {
-        dots: [],
         currentPageIndex: 0
       }
     },
@@ -65,7 +64,7 @@
       }
       this.slide.enable()
       let pageIndex = this.slide.getCurrentPage().pageY
-      this.slide.goToPage(pageIndex, 0, 0)
+      this.slide.goToPage(0, pageIndex, 0)
       this.currentPageIndex = pageIndex
       if (this.autoPlay) {
         this._play()
@@ -117,6 +116,9 @@
           child.style.height = slideHeight + 'px'
           height += slideHeight
         }
+        if (this.loop && !isResize) {
+          height += 2 * slideHeight
+        }
         this.$refs.slideGroup.style.height = height + 'px'
       },
       _initSlide() {
@@ -125,7 +127,7 @@
           scrollY: true,
           momentum: false,
           snap: {
-            // loop: this.loop,
+            loop: this.loop,
             threshold: 0.3,
             speed: 400,
             easing: {
@@ -156,9 +158,6 @@
         if (this.autoPlay) {
           this._play()
         }
-      },
-      _initDots() {
-        this.dots = new Array(this.children.length)
       },
       _play() {
         clearTimeout(this.timer)
